@@ -1,9 +1,11 @@
-name: Install Nginx
+name: transfer the repo
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    
 
 jobs:
   install-nginx:
