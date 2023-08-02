@@ -8,14 +8,18 @@ on:
     
 
 jobs:
-  install-nginx:
+  scriptworkflow:
     runs-on: self-hosted
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-
-      - name: Install Nginx
+      - name: Archive the repo
+        if: github.event_name == 'pull_request' && github.event.pull_request.merged == "true"
+        env:
+         CURRENT_PR_REPO: ${{github.repository}}
+         PR_NUMBER: ${{github.event.number}}
+         shell: bash
         run: |
-          sudo apt-get update
-          sudo apt-get install -y nginx
+         sudo apt install -y jq
+          echo "jq --version"
+          chmod +x ./Archiverepo.sh 
+          ./Archiverepo.sh ${{ env.GA_SECRET }} ${{env.CURRENT_PR_REPO}} ${{env.PULL_REQUEST}}
